@@ -7,7 +7,11 @@ const router = express.Router();
 // @route   GET /api/accounts
 router.get('/', async (req, res, next) => {
   try {
-    const accounts = await db('accounts');
+    const { limit, sortby, sortdir } = req.query;
+
+    const accounts = await db('accounts')
+      .limit(limit || 50)
+      .orderBy(sortby || 'id', sortdir || 'asc');
 
     res.status(200).json({ count: accounts.length, data: accounts });
   } catch (err) {
